@@ -47,6 +47,22 @@
                                         </div>
                                     </div>
                                     <div class="row mb-3">
+                                        <label class="col-sm-2 col-form-label" for="hospital_id">Hospital</label>
+                                        <div class="col-sm-10">
+                                            <select class="form-control" id="hospital_id" name="hospital_id" required>
+                                                <option value="">-- Select Hospital --</option>
+                                                <?php
+                                                require_once '../db/db.php'; // Adjust path if needed
+                                                $stmt = $conn->query("SELECT id, hospital_name FROM hospitals");
+                                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                                    echo '<option value="' . $row['id'] . '">' . htmlspecialchars($row['hospital_name']) . '</option>';
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
                                         <label class="col-sm-2 col-form-label" for="birth_date">Birth Date</label>
                                         <div class="col-sm-10">
                                         <input type="date" class="form-control" id="birth_date" name="birth_date" required />

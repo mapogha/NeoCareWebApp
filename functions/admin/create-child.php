@@ -3,6 +3,35 @@ require_once __DIR__ . '/../../db/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
+        // Extract and sanitize input data
+        $child_name = trim($_POST['child_name']);
+        $mother_name = trim($_POST['mother_name']);
+        $birth_date = $_POST['birth_date'];
+        $hospital_id = $_POST['hospital_id'] ?? null;
+
+        // Check if the child already exists
+        $checkStmt = $conn->prepare("
+            SELECT 1 FROM children 
+            WHERE child_name = :child_name 
+              AND mother_name = :mother_name 
+              AND birth_date = :birth_date 
+              AND hospital_id = :hospital_id
+            LIMIT 1
+        ");
+        $checkStmt->execute([
+            ':child_name' => $child_name,
+            ':mother_name' => $mother_name,
+            ':birth_date' => $birth_date,
+            ':hospital_id' => $hospital_id
+        ]);
+
+        if ($checkStmt->fetchColumn()) {
+            // Child already exists
+            header('Location: ../../admin/create_child.php?error=exists');
+            exit;
+        }
+
+        // Proceed to insert the new child record
         $stmt = $conn->prepare("
             INSERT INTO children (
                 child_name, mother_name, birth_date, street, ward, hospital_id,
@@ -18,12 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ");
 
         $stmt->execute([
-            ':child_name' => $_POST['child_name'],
-            ':mother_name' => $_POST['mother_name'],
-            ':birth_date' => $_POST['birth_date'],
+            ':child_name' => $child_name,
+            ':mother_name' => $mother_name,
+            ':birth_date' => $birth_date,
             ':street' => $_POST['street'] ?? null,
             ':ward' => $_POST['ward'] ?? null,
-            ':hospital_id' => $_POST['hospital_id'] ?? null, // Get from session or select
+            ':hospital_id' => $hospital_id,
             ':registration_number' => $_POST['registration_number'] ?? null,
             ':street_chairman_name' => $_POST['street_chairman_name'] ?? null,
             ':father_name' => $_POST['father_name'] ?? null,
@@ -46,3 +75,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: ../../admin/create_child.php');
     exit;
 }
+?>
