@@ -22,7 +22,10 @@ $children = fetchChildren();
                     <div class="container-xxl flex-grow-1 container-p-y">
                         <!-- Bordered Table -->
                         <div class="card">
-                            <h5 class="card-header">Bordered Table</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="card-header">Children</h5>
+                                <a class="btn btn-primary me-3" href="create_child.php">Add Child</a>
+                            </div>
                             <div class="card-body">
                                 <div class="table-responsive text-nowrap">
                                     <table class="table table-bordered">
@@ -60,6 +63,12 @@ $children = fetchChildren();
                                                     </a>
                                                     <a class="dropdown-item" href="../functions/hospital_admin/delete-child.php?id=<?= $child['id'] ?>" onclick="return confirm('Are you sure you want to delete this record?');">
                                                     <i class="bx bx-trash me-1"></i> Delete
+                                                    </a>
+                                                    <a class="dropdown-item" href="create_child_medical_record.php?id=<?= $child['id'] ?>">
+                                                    <i class="bx bx-edit-alt me-1"></i> Medical Form
+                                                    </a>
+                                                    <a class="dropdown-item" href="view_child_medical_records.php?id=<?= $child['id'] ?>">
+                                                    <i class="bx bx-edit-alt me-1"></i> Health Records
                                                     </a>
                                                 </div>
                                                 </div>
