@@ -47,9 +47,10 @@
                                                 <td><?= htmlspecialchars($record['height']) ?></td>
                                                 <td><?= nl2br(htmlspecialchars($record['observations'])) ?></td>
                                                 <td>
-                                                    <a class="dropdown-item" href="view_child_medical_record.php?id=<?= $record['id'] ?>">
-                                                        <i class="bx bx-show me-1"></i> View
-                                                    </a>
+                                                <a class="dropdown-item" href="view_child_medical_record.php?id=<?= $record['child_id'] ?>">
+                                                    <i class="bx bx-show me-1"></i> View
+                                                </a>
+
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
