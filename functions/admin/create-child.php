@@ -3,13 +3,14 @@ require_once __DIR__ . '/../../db/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        // Extract and sanitize input data
+        $conn->beginTransaction();
+
         $child_name = trim($_POST['child_name']);
         $mother_name = trim($_POST['mother_name']);
         $birth_date = $_POST['birth_date'];
         $hospital_id = $_POST['hospital_id'] ?? null;
 
-        // Check if the child already exists
+        // Prevent duplicate entries
         $checkStmt = $conn->prepare("
             SELECT 1 FROM children 
             WHERE child_name = :child_name 
@@ -26,12 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         if ($checkStmt->fetchColumn()) {
-            // Child already exists
             header('Location: ../../admin/create_child.php?error=exists');
             exit;
         }
 
-        // Proceed to insert the new child record
+        // Insert new child
         $stmt = $conn->prepare("
             INSERT INTO children (
                 child_name, mother_name, birth_date, street, ward, hospital_id,
@@ -64,10 +64,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':parent_id' => $_POST['parent_id'] ?? null
         ]);
 
+        $child_id = $conn->lastInsertId();
+
+        // Generate vaccination schedule based on child_age (assumed to be in weeks)
+        $vaccineStmt = $conn->query("SELECT id, child_age FROM vaccines");
+        $vaccines = $vaccineStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($vaccines as $vaccine) {
+            $ageWeeks = (int) filter_var($vaccine['child_age'], FILTER_SANITIZE_NUMBER_INT);
+            $scheduledDate = date('Y-m-d', strtotime("{$birth_date} +{$ageWeeks} weeks"));
+
+            $scheduleInsert = $conn->prepare("
+                INSERT INTO vaccination_schedule (child_id, vaccine_id, scheduled_date)
+                VALUES (:child_id, :vaccine_id, :scheduled_date)
+            ");
+            $scheduleInsert->execute([
+                ':child_id' => $child_id,
+                ':vaccine_id' => $vaccine['id'],
+                ':scheduled_date' => $scheduledDate
+            ]);
+        }
+
+        $conn->commit();
         header('Location: ../../admin/view_children.php?added=1');
         exit;
+
     } catch (PDOException $e) {
-        error_log('Insert child error: ' . $e->getMessage());
+        $conn->rollBack();
+        error_log('Insert child + schedule error: ' . $e->getMessage());
         header('Location: ../../admin/create_child.php?error=1');
         exit;
     }
