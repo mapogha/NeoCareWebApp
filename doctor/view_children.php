@@ -58,12 +58,12 @@ $children = fetchChildren();
                                                     <a class="dropdown-item" href="view_child.php?id=<?= $child['id'] ?>">
                                                     <i class="bx bx-show me-1"></i> View
                                                     </a>
-                                                    <a class="dropdown-item" href="edit_child.php?id=<?= $child['id'] ?>">
+                                                    <!-- <a class="dropdown-item" href="edit_child.php?id=<?= $child['id'] ?>">
                                                     <i class="bx bx-edit-alt me-1"></i> Edit
                                                     </a>
                                                     <a class="dropdown-item" href="../functions/hospital_admin/delete-child.php?id=<?= $child['id'] ?>" onclick="return confirm('Are you sure you want to delete this record?');">
                                                     <i class="bx bx-trash me-1"></i> Delete
-                                                    </a>
+                                                    </a> -->
                                                     <a class="dropdown-item" href="create_child_medical_record.php?id=<?= $child['id'] ?>">
                                                     <i class="bx bx-edit-alt me-1"></i> Medical Form
                                                     </a>

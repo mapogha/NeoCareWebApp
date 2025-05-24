@@ -13,63 +13,56 @@
   <ul class="menu-inner py-1">
     <!-- Dashboard -->
     <li class="menu-item active">
-      <a href="index.html" class="menu-link">
+      <a href="dashboard.php" class="menu-link">
         <i class="menu-icon tf-icons bx bx-home-circle"></i>
         <div data-i18n="Dashboard">Dashboard</div>
       </a>
     </li>
 
-    <!-- User Management -->
+    <!-- My Children -->
     <li class="menu-item">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons bx bx-user"></i>
-        <div data-i18n="User Management">Child Management</div>
+        <i class="menu-icon tf-icons bx bx-child"></i>
+        <div data-i18n="Children">My Children</div>
       </a>
       <ul class="menu-sub">
         <li class="menu-item">
-          <a href="create_child.php" class="menu-link">
-            <div data-i18n="Health Workers">Add Child</div>
-          </a>
           <a href="view_children.php" class="menu-link">
-            <div data-i18n="Health Workers">Child</div>
+            <div>View My Children</div>
           </a>
         </li>
       </ul>
     </li>
 
-    <!-- Reports -->
+    <!-- Vaccination Reports -->
     <li class="menu-item">
       <a href="view_vaccination_reports.php" class="menu-link">
         <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
-        <div data-i18n="Reports">Vaccination Reports</div>
+        <div>Vaccination Reports</div>
       </a>
     </li>
 
-    <!-- Account Settings -->
+    <!-- Notifications -->
     <li class="menu-item">
-      <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons bx bx-cog"></i>
-        <div data-i18n="Account Settings">Account</div>
+      <a href="notifications.php" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-bell"></i>
+        <div>Notifications</div>
       </a>
-      <ul class="menu-sub">
-        <li class="menu-item">
-          <a href="profile.php" class="menu-link">
-            <div data-i18n="Account">Profile</div>
-          </a>
-        </li>
-        <li class="menu-item">
-          <a href="notifications.php" class="menu-link">
-            <div data-i18n="Notifications">Notifications</div>
-          </a>
-        </li>
-      </ul>
+    </li>
+
+    <!-- Account -->
+    <li class="menu-item">
+      <a href="profile.php" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-user"></i>
+        <div>My Profile</div>
+      </a>
     </li>
 
     <!-- Logout -->
     <li class="menu-item">
-      <a href="logout.html" class="menu-link">
+      <a href="../functions/admin/logout.php" class="menu-link">
         <i class="menu-icon tf-icons bx bx-power-off"></i>
-        <div data-i18n="Logout">Logout</div>
+        <div>Logout</div>
       </a>
     </li>
   </ul>

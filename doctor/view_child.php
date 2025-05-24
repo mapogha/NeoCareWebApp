@@ -26,7 +26,7 @@ require_once '../functions/admin/view-child.php';
                     <div class="col-xl">
                         <div class="card mb-4">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Basic with Icons</h5>
+                            <h5 class="mb-0">Child Information</h5>
                             </div>
                             <div class="card-body">
                             <form>
@@ -110,12 +110,98 @@ require_once '../functions/admin/view-child.php';
                                     </div>
                                 </div>
                             </form>
+                           <br>
+                            <h5 class="mb-0">Growth Rate Graph</h5>
+                            <div class="card-body">
+                            <?php
+                                require_once __DIR__ . '/../db/db.php';
+
+                                $child_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+                                // Fetch weight records of the child
+                                $stmt = $conn->prepare("SELECT age, weight FROM child_medical_records WHERE child_id = :child_id ORDER BY age ASC");
+                                $stmt->execute([':child_id' => $child_id]);
+                                $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                $ages = [];
+                                $weights = [];
+                                foreach ($records as $record) {
+                                    $ages[] = $record['age'];
+                                    $weights[] = $record['weight'];
+                                }
+                                ?>
+
+                                <canvas id="growthChart" height="400"></canvas>
+                                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                                <script>
+                                const ctx = document.getElementById('growthChart').getContext('2d');
+                                const growthChart = new Chart(ctx, {
+                                    type: 'line',
+                                    data: {
+                                        labels: <?= json_encode($ages) ?>,
+                                        datasets: [
+                                            {
+                                                label: 'Child Weight (kg)',
+                                                data: <?= json_encode($weights) ?>,
+                                                borderColor: 'blue',
+                                                fill: false,
+                                                tension: 0.3
+                                            },
+                                            {
+                                                label: 'Median (50th percentile)',
+                                                data: [3.3, 4.8, 6.4, 7.3, 8.1, 8.7, 9.2, 9.6, 9.9, 10.1, 10.3, 10.4, 10.5], // Example data
+                                                borderColor: 'green',
+                                                borderDash: [5, 5],
+                                                fill: false,
+                                                tension: 0.3
+                                            },
+                                            {
+                                                label: 'Low Weight (3rd percentile)',
+                                                data: [2.5, 3.8, 5.2, 6.1, 6.8, 7.4, 7.9, 8.2, 8.5, 8.7, 8.8, 8.9, 9.0], // Example data
+                                                borderColor: 'red',
+                                                borderDash: [5, 5],
+                                                fill: false,
+                                                tension: 0.3
+                                            }
+                                        ]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            title: {
+                                                display: true,
+                                                text: 'Weight-for-Age Growth Chart (Girls)'
+                                            }
+                                        },
+                                        scales: {
+                                            x: {
+                                                title: {
+                                                    display: true,
+                                                    text: 'Age (months)'
+                                                }
+                                            },
+                                            y: {
+                                                title: {
+                                                    display: true,
+                                                    text: 'Weight (kg)'
+                                                },
+                                                beginAtZero: true
+                                            }
+                                        }
+                                    }
+                                });
+                                </script>
+
+                            </div>
 
 
                             </div>
                         </div>
                     </div>
                 </div>
+
+                
+
                     
                 <!-- / Content -->
 

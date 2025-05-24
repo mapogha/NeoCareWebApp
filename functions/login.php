@@ -1,8 +1,6 @@
 <?php
 session_start();
-
-// Include the existing database connection
-require_once '../db/db.php'; // This should create $pdo
+require_once '../db/db.php'; // Ensure this connects using PDO as $conn
 
 // Capture login inputs
 $email = $_POST['email'] ?? '';
@@ -16,17 +14,17 @@ if (empty($email) || empty($password)) {
 // Fetch user from database
 $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
 $stmt->execute([$email]);
-$user = $stmt->fetch();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($user) {
-    // Password check (In production, use password_hash() and password_verify())
-    if ($password === $user['password']) { // You should upgrade to password_hash() for better security
+    // Secure password check
+    if (password_verify($password, $user['password'])) {
         if ($user['is_active']) {
             // Store user info in session
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_role'] = $user['role'];
             $_SESSION['user_name'] = $user['name'];
-            $_SESSION['hospital_id'] = $user['hospital_id']; // Add this line
+            $_SESSION['hospital_id'] = $user['hospital_id'];
 
             // Redirect based on role
             switch ($user['role']) {
